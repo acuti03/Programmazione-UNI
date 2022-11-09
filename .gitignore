@@ -7,6 +7,10 @@
 *.obj
 *.elf
 
+# Random
+*.DS_Store
+
+
 # Linker output
 *.ilk
 *.map
