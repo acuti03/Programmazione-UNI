@@ -1,4 +1,4 @@
-#include "headers.h"
+#include "functions.c"
 
 int main(){
     Campo c;

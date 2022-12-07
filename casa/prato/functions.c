@@ -1,4 +1,5 @@
-#include "main.c"
+#include "conio.h"
+#include "headers.h"
 
 float rnd_float(Campo *c, float a, float b){
     return a + (b - a) * (float)rand() / RAND_MAX;
