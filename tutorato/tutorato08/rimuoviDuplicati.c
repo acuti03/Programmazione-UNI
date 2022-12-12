@@ -22,6 +22,7 @@ int rimuoviDuplicati(char *s1, char *s2){
             if(s1[j] == s2[i]){
                 shift(s1, j);
                 eliminati++;
+                j--;
             }
         }
     }
