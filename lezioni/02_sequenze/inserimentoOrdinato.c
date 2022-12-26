@@ -1,22 +1,21 @@
 #include <stdio.h>
-#define DIM 10
+#define DIM 5
 
-int main(){
-    int m;
-    int a[DIM] = {0, 4, 5, 6, 8, -1, 11, 1, 2, 10};
-    int i, j;
+int main(void) {
+    int m, a[DIM], dl, j;
 
-    for(i=0; i<DIM; i++){
-        scanf("%d",a[i]);
-        for(j=i; j > 0 && m > a[j-1]; j++){
-            a[j] = a[j-1];
+    for (dl = 0; dl < DIM; dl++) {
+        scanf("%d", &m);
+        j = dl;
+        while (j > 0 && a[j - 1] > m/* m precede a[j-1] secondo il criterio usato*/) {
+            a[j] = a[j - 1];
+            j--;
         }
         a[j] = m;
     }
+  // l'array e` ordinato secondo il criterio usato
 
-    printf("\n\n");
-    for(i=0; i < DIM; i++){
-        printf("%d ", a[i]);
+    for(dl = 0; dl < DIM; dl++){
+        printf("%d ", a[dl]);
     }
-    printf("\n");
 }
