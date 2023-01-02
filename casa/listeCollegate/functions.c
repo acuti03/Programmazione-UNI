@@ -36,6 +36,16 @@ void inserimentoInCoda(Lista *l, int d){
 		
 }
 
+
+//  INSERIMENTO ORDINATO
+void inserimentoOrdinato(Lista *l, int d){
+    while (*l != NULL && (*l)->dato < d){
+        l = &(*l)->next;
+    }
+    inserimentoInTesta(l, d);
+}
+
+
 //	MODIFICA DI UN DATO NELLA LISTA
 void modifica(Lista *l, int d){
 	l = ricerca(l, 5); // ricerca del dato
@@ -44,6 +54,7 @@ void modifica(Lista *l, int d){
 		(*l)->dato = ++d; // modifica del dato
 	}
 }
+
 
 //	ELIMINAZIONE DI UN DATO NELLA LISTA
 void eliminaNodo(Lista *l, int d){

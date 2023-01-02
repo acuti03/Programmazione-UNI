@@ -3,8 +3,11 @@
 
 int main(){
     Lista l;
+	Lista l1;
+	int dato;
 //	INIZIALIZZO LA TESTA
     l = NULL;
+	l1 = NULL;
 
 //	INSERISCO IN TESTA ALCUNI ELEMENTI
 	printf("\nInserimento in testa: ");
@@ -27,6 +30,14 @@ int main(){
 	printf("\n\nEliminazione di un dato (3) nella lista: ");
 	eliminaNodo(&l, 3);
 	stampa(l);
+
+//	INSERIMENTO ORDIANTO IN UNA LISTA
+	printf("\n\nInserimento ordinato in una lista: ");
+	for(int i = 0; i < 5; i++){
+		dato = rand()% 20;
+		inserimentoOrdinato(&l1, dato);
+	}
+	stampa(l1);
 
 
 	printf("\n");
