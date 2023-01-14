@@ -72,6 +72,8 @@ void elimina(Lista *head){
         if(anno >= 1950 && !(*head)->dato.anomalia){
             eliminaInTesta(head);
         }
-        head = &(*head)->next;
+        else{
+            head = &(*head)->next;
+        }
     } 
 }
