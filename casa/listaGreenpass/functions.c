@@ -13,6 +13,7 @@ void inizializza(Lista *head){
 }
 
 
+
 void verifica(Lista head, Greenpass *g){
     if(head->dato.tampone && head->dato.vaccino){
         *g = TamponeVaccino;
