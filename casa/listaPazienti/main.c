@@ -7,38 +7,35 @@ int main(int argc, char **argv){
     Record riga;
 
 
-//  inizializzazione e controllo
+//  inizializzazioni e controlli
     system("clear");
+    inizializza(&head);
     if(argc != 2){
-        printf("\nErrore utilizzo argomenti\n");
-        exit(1);
+        printf("\nErrore di usabilità del programma...\n");
+        exit(EXIT_SUCCESS);
     }
 
-    inizializza(&head);
-    f = fopen(argv[1], "rb");
+    f = fopen(argv[1], "rt");
 
     if(f == NULL){
-        printf("\nErrore file\n");
-        exit(1);
+        printf("\nErrore di lettura del file...\n");
+        exit(EXIT_FAILURE);
     }
 
-//  aggiorna la lista
+//  inserimento degli elementi nella lista
     while(fread(&riga, sizeof(Record), 1, f) > 0){
         aggiorna(&head, riga);
     }
-
-//  stampa
-    printf("\n\n--- LISTA ---\n\n");
+    printf("\n\n--- LISTA 1 ---\n\n");
     stampa(head);
 
 //  parte 2
-    printf("\n\n--- LISTA 2 ---\n\n");
     elimina(&head);
-    printf("\n");
+    printf("\n\n--- LISTA 2 ---\n\n");
     stampa(head);
 
 
     fclose(f);
     printf("\n");
-    return 0;
+    return EXIT_SUCCESS;
 }

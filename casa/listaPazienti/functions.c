@@ -7,14 +7,13 @@ void inizializza(Lista *head){
 
 
 void stampa(Lista head){
-    float mediaTemp;
-    float mediaSat;
+    float mediaTemp, mediaSat;
 
-    while (head != NULL){
-        mediaSat = head->dato.sommaSaturazione / head->dato.nRillevazioni;
-        mediaTemp = head->dato.sommaTemperatura / head->dato.nRillevazioni;
+    while(head != NULL){
+        mediaSat = head->dato.sommaSat / head->dato.rilevazioni;
+        mediaTemp = head->dato.sommaTemp / head->dato.rilevazioni;
 
-        printf("%s, temperatura: %0.1f, saturazione: %0.1f\n", head->dato.CF, mediaTemp, mediaSat);
+        printf("%s : %0.1f, %0.1f, %u\n", head->dato.cf, mediaTemp, mediaSat, head->dato.anomalia);
         head = head->next;
     }
 }
@@ -28,52 +27,53 @@ void inserimentoInTesta(Lista *head, Dato d){
 }
 
 
-void aggiorna(Lista *head, Record r){
-    while(*head != NULL && strcmp((*head)->dato.CF, r.CF) != 0){
-        head = &(*head)->next;
-    }
-    
-    if(*head == NULL){
-        Dato d;
-        strcpy(d.CF, r.CF);
-        d.nRillevazioni = 0;
-        d.sommaSaturazione = 0.0;
-        d.sommaTemperatura = 0.0;
-        d.anomalia = 0;
-        inserimentoInTesta(head, d);
-    }
-
-    (*head)->dato.nRillevazioni++;
-    (*head)->dato.sommaSaturazione += r.saturazione;
-    (*head)->dato.sommaTemperatura += r.temperatura;
-
-    if(r.temperatura > 37.5 || r.saturazione < 96.0){
-        (*head)->dato.anomalia = 1;
-    }
-}
-
-
 void eliminaInTesta(Lista *head){
     Nodo *nodo = *head;
     *head = (*head)->next;
     free(nodo);
 }
 
-int annoNascita(char *c){
-    return 1900 + 10 * (c[6] - '0') + (c[7] - '0');
+
+int annoNascita(char* s){
+    return 1900 + 10 * (s[6] - '0') + (s[7] - '0');
+}
+
+
+void aggiorna(Lista *head, Record r){
+    while(*head != NULL && strcmp((*head)->dato.cf, r.cf) != 0){
+        head = &(*head)->next;
+    }
+
+    if(*head == NULL){
+        Dato d;
+
+        strcpy(d.cf, r.cf);
+        d.rilevazioni = 0;
+        d.sommaSat = 0;
+        d.sommaTemp = 0;
+        d.anomalia = falso;
+        if(annoNascita(r.cf) >= 1950 && (r.temperatura > 37.5 || r.saturazione < 96)) d.anomalia = vero;
+
+        inserimentoInTesta(head, d);
+    }
+    (*head)->dato.rilevazioni++;
+    (*head)->dato.sommaSat += r.saturazione;
+    (*head)->dato.sommaTemp += r.temperatura;
 }
 
 
 void elimina(Lista *head){
-    int anno;
+    int mediaTemp, mediaSat;
 
     while(*head != NULL){
-        anno = annoNascita((*head)->dato.CF);
-        if(anno >= 1950 && !(*head)->dato.anomalia){
+        mediaSat = (*head)->dato.sommaSat / (*head)->dato.rilevazioni;
+        mediaTemp = (*head)->dato.sommaTemp / (*head)->dato.rilevazioni;
+
+        if((*head)->dato.anomalia == vero){
             eliminaInTesta(head);
         }
         else{
             head = &(*head)->next;
         }
-    } 
+    }
 }

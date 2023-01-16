@@ -3,20 +3,23 @@
 #include <string.h>
 
 
-typedef struct{
-    char CF[17];
+typedef enum { falso, vero } Bool;
+
+
+typedef struct {
+    char cf[17];
     int ora;
     float temperatura;
     float saturazione;
-}Record;
+} Record;
 
 
 typedef struct{
-    char CF[17];
-    int nRillevazioni;
-    float sommaTemperatura;
-    float sommaSaturazione;
-    int anomalia;
+    char cf[17];
+    int rilevazioni;
+    float sommaSat;
+    float sommaTemp;
+    Bool anomalia;
 } Dato;
 
 
