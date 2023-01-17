@@ -1,49 +1,45 @@
 #include "headers.h"
 
 
-void inizializzaLista(Lista *head){
+void inizializza(Lista *head){
     *head = NULL;
-}
-
-float importo(int a){
-    if(a <= 5) return a * 2.0;
-    else if(a >= 6 && a <= 10) return a * 1.9;
-    else return a * 1.8;
 }
 
 
 void stampa(Lista head){
-    printf("\nLISTA: \n\n");
+    float totale;
+
     while(head != NULL){
-        printf("%s, importo: %.2f", head->dato.targa, importo(head->dato.accessi));
-        printf("\n");
+        if(head->dato.accessi < 5) totale = 2.0 * head->dato.accessi;
+        else if(head->dato.accessi > 5 && head->dato.accessi <= 10) totale = 1.9 * head->dato.accessi;
+        else totale = 1.8 * head->dato.accessi;
+
+        printf("%s %0.2f\n", head->dato.targa, totale);
         head = head->next;
     }
+    
 }
 
 
+
 void inserimentoInTesta(Lista *head, Dato d){
-    Nodo *nodo = (Nodo *)malloc(sizeof(Nodo));
+    Nodo *nodo = (Nodo*)malloc(sizeof(Nodo));
     nodo->dato = d;
     nodo->next = *head;
     *head = nodo;
 }
 
 
-void aggiorna(Lista *head, char *targa){
-
-    while((*head != NULL) && (strcmp((*head)->dato.targa, targa) != 0)){
+void aggiorna(Lista *head, Record r){
+    while(*head != NULL && strcmp((*head)->dato.targa, r.targa) != 0){
         head = &(*head)->next;
     }
 
     if(*head == NULL){
         Dato d;
-        d.accessi = 1;
-        strcpy(d.targa, targa);
+        strcpy(d.targa, r.targa);
+        d.accessi = 0;
         inserimentoInTesta(head, d);
-    }else{
-        (*head)->dato.accessi++;
     }
+    (*head)->dato.accessi++;
 }
-
-

@@ -5,27 +5,25 @@
 
 typedef struct{
     char targa[8];
-    float sosta;
+    float durata;
 } Record;
 
 
 typedef struct{
     char targa[8];
     int accessi;
-}Dato;
+} Dato;
 
 
 typedef struct nodo{
     Dato dato;
     struct nodo *next;
-}Nodo;
+} Nodo;
 
 
 typedef Nodo *Lista;
 
 
-void inizializzaLista(Lista *head);
-float importo(int accessi);
+void inizializza(Lista *head);
 void stampa(Lista head);
-void inserimentoInTesta(Lista *head, Dato d);
-void aggiorna(Lista *head, char *targa);
+void aggiorna(Lista *head, Record r);
