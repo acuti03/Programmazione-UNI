@@ -3,16 +3,15 @@
 #include <string.h>
 
 
-
 typedef struct{
     char indirizzo[30];
-    int vani;
+    int numeroVani;
     float distanza;
-}Dato;
+} Record;
 
 
 typedef struct nodo{
-    Dato dato;
+    Record dato;
     struct nodo *next;
 } Nodo;
 
@@ -20,9 +19,8 @@ typedef struct nodo{
 typedef Nodo *Lista;
 
 
-
-void stampa(Lista head);
 void inizializza(Lista *head);
-void inserimentoInTesta(Lista *head, Dato d);
-void aggiorna(Lista *head, Dato d);
-void ordina(Lista *head, float n);
+void stampa(Lista head);
+void inserimentoOrdinato(Lista *head, Record r);
+void aggiornaLista(Lista *head, int vani);
+void scritturaFile(Lista head, FILE *f);

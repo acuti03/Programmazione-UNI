@@ -1,54 +1,54 @@
 #include "headers.h"
 
 
-
 int main(int argc, char **argv){
-    FILE *fb;
+    FILE *f;
     FILE *ft; // parte 2
+    Record riga;
     Lista head;
-    Dato d;
-    float n;
+    int a;
 
 
-//  inserimenti e controlli
+//  inizializzazioni e controlli
     system("clear");
     inizializza(&head);
 
     if(argc != 2){
-        printf("\nErrore...\n");
-        exit(1);
+        perror("\nErrore di usabilita...\n");
+        exit(EXIT_FAILURE);
     }
 
-    fb = fopen(argv[1], "rb");
-    if(fb == NULL){
-        printf("\nErrore...\n");
-        exit(1);
-    }
-    
-    ft = fopen("vani.txt", "w+t");
-    if(ft == NULL){
-        printf("\nErrore...\n");
-        exit(1);
+    f = fopen(argv[1], "rb");
+    ft = fopen("vani.txt", "wt");
+
+    if(f == NULL || ft == NULL){
+        perror("\nErrore apertura file\n");
+        exit(EXIT_FAILURE);
     }
 
-
-//  inserimento nella lista
-    while(fread(&d, sizeof(Dato), 1, fb) > 0){
-        aggiorna(&head, d);
+//  aggiornamento lista
+    while(fread(&riga, sizeof(Record), 1, f) > 0){
+        inserimentoOrdinato(&head, riga);
     }
-    printf("\n\nLista:\n\n");
+
+//  stampa parte 1
+    printf("\n\n--- LISTA ---\n\n");
     stampa(head);
 
 //  parte 2
-    printf("\n\nInserisci un numero: ");
-    scanf("%f", &n);
-    printf("\n\nLista Ordinata:\n\n");
-    ordina(&head, n);
+    printf("\n\nScrivi il numero di vani: ");
+    scanf("%d", &a);
+
+    aggiornaLista(&head, a);
+
+    printf("\n\n--- LISTA ---\n\n");
     stampa(head);
+    scritturaFile(head, ft);
 
 
-    fclose(fb);
+
+    fclose(f);
     fclose(ft);
     printf("\n");
-    return 0;
+    return EXIT_SUCCESS;
 }

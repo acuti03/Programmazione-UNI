@@ -7,15 +7,16 @@ void inizializza(Lista *head){
 
 
 void stampa(Lista head){
-    while(head){
-        printf("%s, vani: %d, distanza: %f\n", head->dato.indirizzo, head->dato.vani, head->dato.distanza);
+    while(head != NULL){
+        printf("%s, %d, %0.3f\n", head->dato.indirizzo, head->dato.numeroVani, head->dato.distanza);
         head = head->next;
     }
+    
 }
 
 
-void inserimentoInTesta(Lista *head, Dato d){
-    Nodo *nodo = malloc(sizeof(Nodo));
+void inserimentoInTesta(Lista *head, Record d){
+    Nodo *nodo = (Nodo*)malloc(sizeof(Nodo));
     nodo->dato = d;
     nodo->next = *head;
     *head = nodo;
@@ -29,34 +30,46 @@ void eliminaInTesta(Lista *head){
 }
 
 
-void inserimentoOrdinato(Lista *head, Dato d){
-    while(*head != NULL && (*head)->dato.distanza < d.distanza){
+void inserimentoOrdinato(Lista *head, Record r){
+    while (*head != NULL && (*head)->dato.distanza < r.distanza){
         head = &(*head)->next;
     }
-    inserimentoInTesta(head, d);
+    inserimentoInTesta(head, r);
 }
 
 
-void ordina(Lista *head, float n){
-    Lista headOrdinata;
+int precede(Record r1, Record r2){
+    return r1.numeroVani > r2.numeroVani || r1.numeroVani == r2.numeroVani && r1.distanza < r2.distanza;
+}
 
+
+void inserisci(Lista *head, Record r){
+    while (*head != NULL && precede((*head)->dato, r)){
+        head = &(*head)->next;
+    }
+    inserimentoInTesta(head, r);
+}
+
+
+void aggiornaLista(Lista *head, int vani){
+    Lista headOrdinata;
     inizializza(&headOrdinata);
 
     while(*head != NULL){
-        if((*head)->dato.vani >= n){
-            inserimentoOrdinato(&headOrdinata, (*head)->dato);
+        if(vani <= (*head)->dato.numeroVani){
+            inserisci(&headOrdinata, (*head)->dato);
         }
         eliminaInTesta(head);
     }
+    
     *head = headOrdinata;
 }
 
 
-
-void aggiorna(Lista *head, Dato d){
-    while(*head != NULL && d.distanza > (*head)->dato.distanza){
-        head = &(*head)->next;
+void scritturaFile(Lista head, FILE *f){
+    while(head != NULL){
+        fprintf(f, "%s %d %0.3f\n", head->dato.indirizzo, head->dato.numeroVani, head->dato.distanza);
+        head = head->next;
     }
-
-    inserimentoInTesta(head, d);
+    
 }

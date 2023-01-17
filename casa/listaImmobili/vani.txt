@@ -1,0 +1,3 @@
+Corso Roma, 32 6 1.700
+Via Mazzini, 18 5 0.200
+Via Garibaldi, 19 5 1.400
