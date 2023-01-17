@@ -5,42 +5,42 @@ int main(int argc, char **argv){
     FILE *ft;
     FILE *fb;
     Lista head;
-    char CF[17];
+    Record riga;
+    char cf[17];
 
 
-//  controlli e inizializzazione dei file e della lista
-    system("clear");
-    inizializzaLista(&head);
-
+//  inizializzazioni e controlli
+    inizializza(&head);
     if(argc != 3){
-        printf("\nErrore...\n");
-        exit(1);
+        printf("\nErrore usabilita...\n");
+        exit(EXIT_FAILURE);
     }
 
     fb = fopen(argv[1], "rb");
     ft = fopen(argv[2], "rt");
-    if(fb == NULL || ft == NULL){
-        printf("\nErrore...\n");
-        exit(1);
+
+    if(ft == NULL || fb == NULL){
+        printf("\nErrore lettura file...\n");
+        exit(EXIT_FAILURE);
     }
 
-
-//  riempimento della lista
-    while(fread(CF, sizeof(CF), 1, fb) > 0){
-        riempiLista(&head, CF);
+//  inserimento nella lista
+    while(fread(cf, sizeof(cf), 1, fb) > 0){
+        inserisciCF(&head, cf);
     }
-    printf("\n\n");
-    stampa(head);
 
+    printf("\n\n--- LISTA 1 ---\n\n");
+    while(fscanf(ft, "%s %d", riga.cf, &riga.attivita) > 0){
+        aggiorna(&head, riga);
+    }
 
-//  controllo e stampa
-    controllo(&head, ft);
-    printf("\n\n\n---- DOPO IL CONTROLLO ----\n\n");
+//  stampa tentativi falliti
     stampa(head);
     
+
 
     fclose(fb);
     fclose(ft);
     printf("\n");
-    return 0;
+    return EXIT_SUCCESS;
 }

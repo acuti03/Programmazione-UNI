@@ -3,25 +3,32 @@
 #include <string.h>
 
 
+typedef struct{
+    char cf[17];
+    int attivita;
+} Record;
+
+
 
 typedef struct{
-    char CF[17];
-    int ingressi[3];
-}Dato;
+    char cf[17];
+    int tentativi;
+    int attivita1;
+    int attivita2;
+    int attivita3;
+} Dato;
 
 
 typedef struct nodo{
     Dato dato;
     struct nodo *next;
-}Nodo;
+} Nodo;
 
 
 typedef Nodo *Lista;
 
 
-void inizializzaLista(Lista *head);
 void stampa(Lista head);
-void inserimentoInTesta(Lista *head, Dato d);
-void riempiLista(Lista *head, char c[17]);
-void aggiornaLista(Lista *head, char c[17], int attivita);
-void controllo(Lista *head, FILE *ft);
+void inizializza(Lista *head);
+void aggiorna(Lista *head, Record r);
+void inserisciCF(Lista *head, char *cf);
