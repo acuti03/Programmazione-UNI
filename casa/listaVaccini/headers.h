@@ -3,33 +3,34 @@
 #include <string.h>
 
 
+typedef enum { falso, vero } Bool;
+
+
 typedef struct{
     int chip;
-    char vaccinazione;
+    char tipo;
 } Record;
 
 
-typedef enum { falso, vero } Boolean;
-
-
 typedef struct{
     int chip;
-    Boolean vaccinatoC;
-    Boolean vaccinatoP;
-    Boolean vaccinatoE;
+    Bool vaccinoC;
+    Bool vaccinoP;
+    Bool vaccinoE;
 } Dato;
 
 
 typedef struct nodo{
     Dato dato;
     struct nodo *next;
-}Nodo;
+} Nodo;
 
 
 typedef Nodo *Lista;
 
 
-void inizializzaLista(Lista *head);
+void inizializza(Lista *head);
 void stampa(Lista head);
-void inserimentoInTesta(Lista *head, Dato d);
 void aggiorna(Lista *head, Record r);
+void insertionSort(Lista *head);
+void inserimentoFile(Lista head, FILE *f);

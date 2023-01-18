@@ -2,34 +2,42 @@
 
 
 int main(int argc, char **argv){
-	FILE *f;
-	Record riga;
-	Lista head;
+    FILE *fb;
+    FILE *ft; // file per la parte 2
+    Lista head;
+    Record riga;
 
-//	inizializzazione lista, file e controlli
-	inizializzaLista(&head);
-	if(argc != 2){
-		printf("\nUtilizzo del programma errato");
-		exit(1);
-	}
+    
+//  inizializzazioni e controlli
+    system("clear");
+    inizializza(&head);
 
-	f = fopen(argv[1], "rb");
-	if(f == NULL){
-		printf("\nErrore...");
-		exit(2);
-	}
+    if(argc != 2){
+        printf("\nErrore utlizzo file...");
+        exit(-1);
+    }
 
-//	lettura file
-	while(fread(&riga, sizeof(Record), 1, f) > 0){
-		aggiorna(&head, riga);
-	}
-	
-	printf("\nLista:\n\n");
-	stampa(head);
+    fb = fopen(argv[1], "rb");
+    ft = fopen("vaccinati.txt", "w+t");
 
+    if(fb == NULL || ft == NULL){
+        printf("\nErrore apertura file...");
+        exit(-1);
+    }
 
+//  aggiornamento lista e stampa
+    while(fread(&riga, sizeof(Record), 1, fb) > 0){
+        aggiorna(&head, riga);
+    }
+    printf("\n\n--- LISTA ---\n\n");
+    stampa(head);
 
-	fclose(f);
-	printf("\n");
-	return 0;
+//  parte 2
+    insertionSort(&head);
+    inserimentoFile(head, ft);
+    
+    
+
+    printf("\n");
+    return 0;
 }
