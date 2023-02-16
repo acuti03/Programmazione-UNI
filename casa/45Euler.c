@@ -44,7 +44,7 @@ int main(){
         h = hexagonal(k);
 
         if(h > p){
-            k = 2;
+            k = START_HEXAGONE;
             j++;
         }
         else{
@@ -52,10 +52,8 @@ int main(){
         }
     }
 
-    i = START_TRIANGLE;
-    while(t != p){
+    for(i = START_TRIANGLE; t != p; i++){
         t = triangle(i);
-        i++;
     }
 
     printf("\ntriangle number: %llu", t);
