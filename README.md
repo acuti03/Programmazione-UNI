@@ -1,6 +1,6 @@
 # Programmazione-UNI
 
-`
+```
 STRUTTURA:
 │   # Esercizi svolti a casa e approfondimenti
 ├── casa
@@ -8,4 +8,4 @@ STRUTTURA:
 ├── lezioni
 │   # Materiale del tutorato
 └── tutorato
-`
+```
