@@ -6,6 +6,8 @@ STRUTTURA:
 ├── casa
 │   # Materiale delle lezioni
 ├── lezioni
+│   # Materiale di assembly
+├── assembly
 │   # Materiale del tutorato
 └── tutorato
 ```
