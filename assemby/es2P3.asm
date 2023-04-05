@@ -10,65 +10,61 @@
 	string: .asciiz "il risultato vale: "
 
 .text
-
-.globl main
-
-main:
-
+#	carico i valori nelle varabili da passare nelle funzioni
+	lw $a0, a
+	lw $a1, b
+	lw $a2, c
+	lw $a3, d
+	
+#	riservo 8 byte sullo stack
+	addi $sp, $sp, -8
+	sw $s0, 4($sp) # e sullo stack
+	sw $s1, 0($sp) # f sullo stack
+	
 	jal do_match
+	
+#	devo liberare lo stack
+	addi $sp, $sp, 8
+	move $t0, $v0
 	
 	la $a0, string
 	li $v0, 4
 	syscall
 	
-	lw $a0, z
+	move $a0, $t0
 	li $v0, 1
 	syscall
 	
 	li $v0, 10
-    syscall
+	syscall
+	
 
 
 do_match:
-
+	# gestiamo Z direttamente nei registri del processore
+	# alloco un frame per la push di $s0 e $s1, che
+	# userò per le variabili E ed F, nonchè per la push del frame pointer
 	addi $sp, $sp, -12
-	sw $t0, 0($sp)
-	sw $t1, 4($sp)
-	sw $s0, 8($sp)
-	
-#	carico nelle variabili i valori e li sommo
-	lw $t0, a
-	lw $t1, b
+	sw $fp, 8($sp) # salvo il frame pointer
+	sw $s0, 4($sp) # salvo s0 
+	sw $s1, 0($sp) # salvo s1
+	addi $fp, $sp, 8 # resizing frame pointer (prima parola del nuovo frame)
+
+	add $t0, $a0, $a1
+	sub $t1, $a2, $a3
+	lw $s0, 8($fp) # E in $s0
+	lw $s1, 4($fp) # F in $s1
+	add $t2, $s0, $s1 # E + F
+	sub $t3, $a0, $a2 # A - C
+
 	add $t0, $t0, $t1
-	add $s0, $s0, $t0
+	add $t0, $t0, $t2
+	sub $v0, $t0, $t3 # allochiamo il risultato in v0
 
-#	faccio la stessa cosa di prima continuando l'esercizio
-	lw $t0, c
-	lw $t1, d
-	sub $t0, $t0, $t1
-	add $s0, $s0, $t0
-	
-	lw $t0, e
-	lw $t1, f
-	add $t0, $t1, $t0
-	add $s0, $s0, $t0
-	
-	lw $t0, a
-	lw $t1, c
-	sub $t0, $t0, $t1
-	sub $s0, $s0, $t0
-	
-#	assegno il valore a z
-	sw $s0, z
-	
-#	metto il valore di ritorno
-	lw $v1, z
-	
-#	ripristino i registri
-	lw $t0, 0($sp)
-	lw $t1, 4($sp)
-	lw $s0, 8($sp)
-
-#	mando avanti lo stack pointer e ritorno ra
-	addi $sp, $sp, 12
+#	rimetto a posto tutto >:(
+	lw $s1, 0($sp)
+	lw $s0, 4($sp)
+	lw $fp, 8($sp)
+	addi $sp, $sp, 12 # ripristino il frame pointer
 	jr $ra
+	
