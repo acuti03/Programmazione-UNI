@@ -1,0 +1,73 @@
+x.data
+	
+	guess: .asciiz " Enter your guess: "
+	succes: .asciiz " is the magic number.\n"
+	high: .asciiz " too high.\n"
+	low: .asciiz " too low.\n"
+	wrong: .asciiz " wrong\n"
+	right: .asciiz " right\n"
+	
+.text
+	
+	li $s0, 1325 # magic
+	add $t0, $t0, $zero # guess
+	
+	li $t1, 10 # total
+	li $t2, 0 # start counting
+	
+loop:
+#	check
+	beq $t2, $t1, endLoop
+	beq $s0, $t0, endLoop
+
+#	enter
+	li $v0, 4
+	la $a0, guess
+	syscall
+	
+	li $v0, 5
+	syscall
+	move $t0, $v0
+	
+#	if guess = magic
+	bne $s0, $t0, notEqual
+	
+	li $v0, 4
+	la $a0, right
+	syscall
+	
+	li $v0, 1
+	move $a0, $s0
+	syscall
+	
+	li $v0, 4
+	la $a0, succes
+	syscall
+	
+	j endLoop
+
+#	guess != magic
+notEqual:
+	li $v0, 4
+	la $a0, wrong
+	syscall
+	
+	blt $t0, $s0, less
+	la $a0, high
+	syscall
+	j loop
+	
+less:
+	la $a0, low
+	syscall
+	
+#	i++
+	addi $t2, $t2, 1
+	
+#	jump loop
+	j loop
+	
+endLoop:
+#	return
+	li $v0, 10
+	syscall
