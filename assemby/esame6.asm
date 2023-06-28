@@ -31,7 +31,7 @@ correlationCoefficient:
 	addi $sp, $sp, -28
 	sw $s0, 24($sp) # n
 	sw $s1, 20($sp) # X pointer
-	sw $s2, 20($sp) # Y pointer
+	sw $s2, 16($sp) # Y pointer
 	sw $s3, 12($sp) # sum_X
 	sw $s4, 8($sp) # sum_Y
 	sw $s5, 4($sp) # sum_XY
@@ -96,13 +96,13 @@ endFor:
 	sub $v0, $t0, $t1 # return value
 	
 #	POP
-	lw $s0, 24($sp)
-	lw $s1, 20($sp)
-	lw $s2, 20($sp)
-	lw $s3, 12($sp)
-	lw $s4, 8($sp)
-	lw $s5, 4($sp)
 	lw $s6, 0($sp)
+	lw $s5, 4($sp)
+	lw $s4, 8($sp)
+	lw $s3, 12($sp)
+	lw $s2, 16($sp)
+	lw $s1, 20($sp)
+	lw $s0, 24($sp)
 	addi $sp, $sp, 28
 	
 	jr $ra
