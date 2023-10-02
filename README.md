@@ -2,12 +2,12 @@
 
 ```
 STRUTTURA:
-│   # Esercizi svolti a casa e approfondimenti
-├── casa
-│   # Materiale delle lezioni
-├── lezioni
+│   # Materiale di C
+├── C
 │   # Materiale di assembly
 ├── assembly
+│   # Materiale di matlab
+├── matlab
 │   # Materiale del tutorato
 └── tutorato
 ```
