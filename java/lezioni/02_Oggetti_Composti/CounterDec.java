@@ -14,7 +14,11 @@ public class CounterDec {
 	}
 
 	public void dec(){
-		c = new Counter(getValue()-1);
+		c.reset();
+
+		for(int i = 0; i < c.getValue()-1; i++){
+			c.inc();
+		}
 	}
 
 	public void reset(){
