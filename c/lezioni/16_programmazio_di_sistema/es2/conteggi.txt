@@ -1,0 +1,2 @@
+conteggi.txt sono
+conteggi.txt simone
