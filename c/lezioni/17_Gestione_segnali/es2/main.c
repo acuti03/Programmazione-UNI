@@ -10,45 +10,70 @@
 
 typedef struct sigaction Sigaction;
 
-static volatile sig_atomic_t cnt = 0;
-static volatile sig_atomic_t child_index = 0;
-static volatile sig_atomic_t nChildren = 0;
-static volatile sig_atomic_t flag = FALSE;
-
 enum Bool {
 	FALSE,
 	TRUE,
 };
 
-void gestore1(int signo){
+static volatile sig_atomic_t cnt = 0;
+static volatile sig_atomic_t child_index;
+static volatile sig_atomic_t nChildren;
+static volatile sig_atomic_t flag = FALSE;
+
+void sigusr1_handler(int signo){
 	printf("Child %d: incrementato il contatore\n", child_index);
 	printf("Nuovo valore contatore child %d: %d\n", child_index, cnt);
 	cnt++;
 	exit(0);
 }
 
-void gestore2(int signo){
+void sigusr2_handler(int signo){
 	printf("Child %d: decrementato il contatore\n", child_index);
 	printf("Nuovo valore contatore child %d: %d\n", child_index, cnt);
 	cnt--;
 	exit(0);
 }
 
-void gestoreint(int signo){
-	printf("child %d: terminazione con valore counter", child_index, cnt);
+void sigint_child_handler(int signo){
+	printf("child %d: terminazione con valore counter: %d", child_index, cnt);
 	exit(0);
 }
 
-void gestoreparent(int signo){
-	int status;
+void sigint_parent_handler(int signo){
+	int status, i;
+
+	printf("Ricevuto CTRL-C --> Attendo la sincronizzazione con i children\n");
+
+	for(i = 0; i < nChildren; i++){
+		wait(&status);
+	}
+
+	printf("Tutti i children terminati, chiudo il programma\n");
+	flag = TRUE;
 }
 
-int main(int argc, char **argv){
-	srand(time(NULL));
-	pid_t pid;
-	int i, pid_index, *children;
 
-	children = (int *)malloc(atoi(argv[0]) * sizeof(int));
+
+int main(int argc, char **argv){
+
+	srand(time(NULL));
+	Sigaction sigurs1, sigurs2, sigint, sigint_parent;
+	pid_t pid;
+	int i, *children;
+
+//	Controllo dei parametri
+	if(argc != 2){
+		fprintf(stderr, "Utilizzo: ./figlicounter <nChildren>\n");
+		exit(1);
+	}
+
+	if(atoi(argv[1]) <= 0){
+		fprintf(stderr, "<nChildren> deve essere un intero positivo");
+		exit(2);
+	}
+
+	nChildren = atoi(argv[1]);
+	children = (int *)malloc(nChildren * sizeof(int));
 
 	for(i = 0; i < atoi(argv[0]); i++){
 		pid = fork();
@@ -58,33 +83,31 @@ int main(int argc, char **argv){
 			exit(5);
 		}
 		else if(pid == 0){
-			pid_index = i;
+			child_index = i;
 
-			Sigaction sa;
+			sigemptyset(&sigurs1.sa_flags);
+			sigurs1.sa_flags = 0;
+			sigurs1.sa_handler = sigusr1_handler;
 
-			sigemptyset(&sa.sa_flags);
-			sa.sa_flags = 0;
-			sa.sa_handler = gestore1;
-
-			if(sigaction(SIGUSR1, &sa, NULL) < 0) {
-				perror("sigaction");
+			if(sigaction(SIGUSR1, &sigurs1, NULL) < 0) {
+				perror("Errore nel gestore di sigurs1");
 				exit(-3);
 			}
 
-			sigemptyset(&sa.sa_flags);
-			sa.sa_flags = 0;
-			sa.sa_handler = gestore2;
+			sigemptyset(&sigurs2.sa_flags);
+			sigurs2.sa_flags = 0;
+			sigurs2.sa_handler = sigusr2_handler;
 
-			if(sigaction(SIGUSR2, &sa, NULL) < 0) {
-				perror("sigaction");
+			if(sigaction(SIGUSR2, &sigurs2, NULL) < 0) {
+				perror("Errore nel ");
 				exit(-3);
 			}
 
-			sigemptyset(&sa.sa_flags);
-			sa.sa_flags = 0;
-			sa.sa_handler = gestoreint;
+			sigemptyset(&sigint.sa_flags);
+			sigint.sa_flags = 0;
+			sigint.sa_handler = sigint_child_handler;
 
-			if(sigaction(SIGINT, &sa, NULL) < 0) {
+			if(sigaction(SIGINT, &sigint, NULL) < 0) {
 				perror("sigaction");
 				exit(-3);
 			}
@@ -97,12 +120,11 @@ int main(int argc, char **argv){
 		children[i] = pid;
 	}
 
-	Sigaction sa;
-	sigemptyset(&sa.sa_flags);
-	sa.sa_flags = 0;
-	sa.sa_handler = gestore2;
+	sigemptyset(&sigint_parent.sa_flags);
+	sigint_parent.sa_flags = 0;
+	sigint_parent.sa_handler = sigint_parent_handler;
 
-	if(sigaction(SIGUSR2, &sa, NULL) < 0) {
+	if(sigaction(SIGUSR2, &sigint_parent, NULL) < 0) {
 		perror("sigaction");
 		exit(-3);
 	}
@@ -113,7 +135,6 @@ int main(int argc, char **argv){
 		kill(children[random_index], sig);
 		sleep(2);
 	}
-	
 	
 	return 0;
 }

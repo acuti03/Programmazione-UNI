@@ -23,19 +23,39 @@ void gestore(int signo){
 
 
 int main(int argc, char **argv){
+
 	pid_t *pid;
 	int i, status;
 
+//	Controllo degli argomenti
+	if(argc != 3){
+		fprintf(stderr, "Utilizzo: ./itercounter <num_processi> <secondi>\n");
+		exit(1);
+	}
 
+	if(atoi(argv[1]) <= 0){
+		fprintf(stderr, "<num_processi> deve essere positivo");
+		exit(2);
+	}
+
+	if(atoi(argv[2]) <= 0){
+		fprintf(stderr, "<secondi> deve essere positivo");
+		exit(3);
+	}
+
+//	Alloco dinamicamente i byte a seconda del numero di processi
 	pid = (int *)malloc(atoi(argv[1]) * sizeof(int));
 
+//	Genero i figli
 	for(i = 0; i < atoi(argv[1]); i++){
 		pid[i] = fork();
 
 		if(pid[i] < 0){
 			perror("Errore nella fork\n");
-			exit(5);
+			exit(4);
 		}
+
+//		Codice del figlio
 		else if(pid[i] == 0){
 			Sigaction sa;
 
@@ -53,14 +73,18 @@ int main(int argc, char **argv){
 				cnt++;
 			}
 		}
-
 		sleep(atoi(argv[2]));
 	}
 
+//	Codice del padre
+	sleep(atoi(argv[2]));
+
+//	Invio SIGURS1 a tutti i processi figli
 	for(i = 0; i < atoi(argv[1]); i++){
 		kill(pid[i], SIGUSR1);
 	}
 
+//	Libero la memoria
 	free(pid);
 
 	for(i = 0; i < atoi(argv[1]); i++){
