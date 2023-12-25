@@ -1,24 +1,25 @@
 package es1;
 
 public class Accomulatore {
-    private double val;
+	private double accomulatore;
 
-    public Accomulatore(double val){
-        this.val = val;
-    }
+	public Accomulatore(double val){
+		accomulatore = val;
+	}
 
-    public void addValue(double val){
-        this.val += val;
+	public void addValue(double val){
 
-        try{
-            Thread.sleep(200);
-        }
-        catch(InterruptedException e){
-            System.out.println(e);
-        }
-    }
+		try {
+			Thread.sleep(200);
+		} 
+		catch(InterruptedException e){
+			System.out.println(e);
+		}
 
-    public double getValue(){
-        return val;
-    }
+		accomulatore += val;
+	}
+
+	public double getValue(){
+		return accomulatore;
+	}
 }
