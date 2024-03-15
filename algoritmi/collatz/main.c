@@ -17,7 +17,7 @@ int main(void) {
 	for (i = 1; n != 1; i++) {
 		printf("%d\n", n);
 		
-   	if((int) pow(2, (int)log2(n)) == n){
+	 	if((int) pow(2, (int)log2(n)) == n){
 			i += log2(n);
 			break;
 		}
